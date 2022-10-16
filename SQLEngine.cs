@@ -14,10 +14,12 @@ namespace Week6Databases
     {
         string SqlConString { get; set; }
         string TableName { get; set; }
+        MyFile CurrentFile { get; set; }
 
-        public SQLEngine(string tableName)
+        public SQLEngine(string tableName, MyFile _file)
         {
             TableName = tableName;
+            CurrentFile = _file;
 
             // sourced from powerpoint example
             SqlConnectionStringBuilder sqlConStringBuilder = new SqlConnectionStringBuilder();
@@ -27,14 +29,26 @@ namespace Week6Databases
             sqlConStringBuilder["Initial Catalog"] = "PROG260FA22";
 
             SqlConString = sqlConStringBuilder.ToString();
+            RunSqlTasks();
+        }
+
+        public List<Error> RunSqlTasks()
+        {
+            List<Error> errors = new List<Error>();
+            errors.AddRange(Insert());
+            errors.AddRange(UpdateLocations());
+            errors.AddRange(DeleteExpiredEntries());
+            errors.AddRange(IncrementPrice());
+            errors.AddRange(ExportData());
+            return errors;
         }
 
         /// <summary>
-        /// Insert reads all data from the specified file and adds the data to the table specified by tablename
+        /// Insert reads all data from the current file and adds the data to the table specified by tablename
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public List<Error> Insert(MyFile file)
+        private List<Error> Insert()
         {
             List<Error> errors = new List<Error>();
             List<string[]> lines = new List<string[]>();
@@ -42,7 +56,7 @@ namespace Week6Databases
 
             try
             {
-                using (StreamReader sr = new StreamReader(file.FilePath))
+                using (StreamReader sr = new StreamReader(CurrentFile.FilePath))
                 {
                     int index = 0;
                     while (!sr.EndOfStream)
@@ -54,7 +68,7 @@ namespace Week6Databases
                         }
                         else
                         {
-                            var lineItems = sr.ReadLine()?.Split(file.Delimiter) ?? new string[0];
+                            var lineItems = sr.ReadLine()?.Split(CurrentFile.Delimiter) ?? new string[0];
                             lines.Add(lineItems);
                         }
                         
@@ -97,7 +111,7 @@ namespace Week6Databases
         /// </summary>
         /// <param name="_headers"></param>
         /// <returns></returns>
-        public string SetHeaders(string[] _headers)
+        private string SetHeaders(string[] _headers)
         {
             string temp = "";
             for (int i = 0; i < _headers.Length; i++)
@@ -119,7 +133,7 @@ namespace Week6Databases
         /// UpdateLocations will update any locations that include F with Z
         /// </summary>
         /// <returns></returns>
-        public List<Error> UpdateLocations()
+        private List<Error> UpdateLocations()
         {
             List<Error> errors = new List<Error>();
 
@@ -156,7 +170,7 @@ namespace Week6Databases
         /// DeleteExpiredEntries deletes any entries where the current date is greater than the sell by date
         /// </summary>
         /// <returns></returns>
-        public List<Error> DeleteExpiredEntries()
+        private List<Error> DeleteExpiredEntries()
         {
             List<Error> errors = new List<Error>();
 
@@ -193,7 +207,7 @@ namespace Week6Databases
         /// Increments all prices by 1
         /// </summary>
         /// <returns></returns>
-        public List<Error> IncrementPrice()
+        private List<Error> IncrementPrice()
         {
             List<Error> errors = new List<Error>();
 
@@ -228,11 +242,10 @@ namespace Week6Databases
         }
 
         /// <summary>
-        /// Reads all data collected by the inline sql command, adds values to a dictionary and srites them to a new text file
+        /// Reads all data collected by the inline sql command, adds values to a dictionary and writes them to a new text file
         /// </summary>
-        /// <param name="file"></param>
         /// <returns></returns>
-        public List<Error> ExportData(MyFile file)
+        private List<Error> ExportData()
         {
             List<Error> errors = new List<Error>();
             int fields = 6;
@@ -240,7 +253,7 @@ namespace Week6Databases
             try
             {
                 Dictionary<int, List<string>> lines = new Dictionary<int, List<string>>();
-                string writePath = file.FilePath.Replace(file.Extension, $"_out.txt");
+                string writePath = CurrentFile.FilePath.Replace(CurrentFile.Extension, $"_out.txt");
 
                 if (File.Exists(writePath))
                 {
@@ -268,6 +281,7 @@ namespace Week6Databases
                             lines.Add(index, temp);
                             index++;
                         }
+                        reader.Close();
                     }
 
                     conn.Close();

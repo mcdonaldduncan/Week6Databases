@@ -16,7 +16,7 @@ namespace Week6Databases
 
         /// <summary>
         /// Parser Constructor takes a list of strings, converts them into MyFile objects, and adds them to the filesToProcess list 
-        /// After collecting files and checking for initial errors, parser calls sql engine methods that should be executed
+        /// After collecting files and checking for initial errors, parser calls sql engine RunEngineTasks
         /// </summary>
         /// <param name="fileNames">string names of the files that the user wants to parse</param>
         public Parser()
@@ -40,19 +40,11 @@ namespace Week6Databases
                 return;
             }
 
-            SQLEngine engine = new SQLEngine("[dbo].[Produce]");
+            
 
-            foreach (var item in filesToProcess)
+            foreach (var file in filesToProcess)
             {
-                if (hasErrors)
-                {
-                    return;
-                }
-                errors.AddRange(engine.Insert(item));
-                errors.AddRange(engine.UpdateLocations());
-                errors.AddRange(engine.DeleteExpiredEntries());
-                errors.AddRange(engine.IncrementPrice());
-                errors.AddRange(engine.ExportData(item));
+                SQLEngine engine = new SQLEngine(databaseName, file);
             }
 
             if (!hasErrors)

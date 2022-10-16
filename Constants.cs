@@ -10,6 +10,8 @@ namespace Week6Databases
     {
         private const string folderName = "temp";
 
-        public static string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        public static string directoryPath => Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+        public static string databaseName => "[dbo].[Produce]";
     }
 }
