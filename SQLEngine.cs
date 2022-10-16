@@ -248,6 +248,8 @@ namespace Week6Databases
 
                 using (StreamWriter sw = new StreamWriter(writePath, true))
                 {
+                    sw.WriteLine($"Processed at: {DateTime.Now}");
+                    sw.WriteLine();
                     sw.WriteLine("ID,Name,Location,Price,UoM,Sell_by_Date");
 
                     foreach (var item in lines)
@@ -282,7 +284,7 @@ namespace Week6Databases
         }
 
         /*
-        public List<Error> Insert()
+        public List<Error> ErrorReturn()
         {
             List<Error> errors = new List<Error>();
 
