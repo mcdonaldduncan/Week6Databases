@@ -1,0 +1,4 @@
+ID,Name,Location,Price,UoM,Sell_by_Date
+11|Red Apples|12Z|3.9900|Bag|10/31/2022 12:00:00 AM
+14|Watermelon|6B|7.9900|Each|12/15/2022 12:00:00 AM
+15|Yellow Apples|12A|5.1900|Bag|10/29/2022 12:00:00 AM
