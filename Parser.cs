@@ -45,6 +45,7 @@ namespace Week6Databases
             foreach (var file in filesToProcess)
             {
                 SQLEngine engine = new SQLEngine(databaseName, file);
+                errors.AddRange(engine.RunSqlTasks());
             }
 
             if (!hasErrors)

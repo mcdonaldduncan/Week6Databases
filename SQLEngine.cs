@@ -29,7 +29,7 @@ namespace Week6Databases
             sqlConStringBuilder["Initial Catalog"] = "PROG260FA22";
 
             SqlConString = sqlConStringBuilder.ToString();
-            RunSqlTasks();
+            
         }
 
         public List<Error> RunSqlTasks()
