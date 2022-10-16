@@ -16,10 +16,10 @@ namespace Week6Databases
         string TableName { get; set; }
         MyFile CurrentFile { get; set; }
 
-        public SQLEngine(string tableName, MyFile _file)
+        public SQLEngine(string tableName, MyFile file)
         {
             TableName = tableName;
-            CurrentFile = _file;
+            CurrentFile = file;
 
             // sourced from powerpoint example
             SqlConnectionStringBuilder sqlConStringBuilder = new SqlConnectionStringBuilder();
@@ -217,8 +217,7 @@ namespace Week6Databases
                 {
                     conn.Open();
 
-                    string inLineSql = $@"UPDATE {TableName}" +
-                                       $"SET Price = Price + 1";
+                    string inLineSql = $@"UPDATE {TableName} SET Price = Price + 1";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
@@ -319,7 +318,6 @@ namespace Week6Databases
             {
                 errors.Add(new Error(e.Message, e.Source));
             }
-
 
             return errors;
         }
