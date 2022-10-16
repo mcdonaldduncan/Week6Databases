@@ -16,7 +16,7 @@ namespace Week6Databases
 
         /// <summary>
         /// Parser Constructor takes a list of strings, converts them into MyFile objects, and adds them to the filesToProcess list 
-        /// before initiating the engine process, parser uses MyFile constructor to check for file extension errors
+        /// After collecting files and checking for initial errors, parser calls sql engine methods that should be executed
         /// </summary>
         /// <param name="fileNames">string names of the files that the user wants to parse</param>
         public Parser()
