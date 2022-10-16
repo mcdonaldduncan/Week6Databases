@@ -40,8 +40,6 @@ namespace Week6Databases
                 return;
             }
 
-            
-
             foreach (var file in filesToProcess)
             {
                 SQLEngine engine = new SQLEngine(databaseName, file);
